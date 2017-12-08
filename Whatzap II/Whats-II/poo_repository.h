@@ -22,6 +22,13 @@ public:
         return &_mapa[key];
     }
 
+    T& addAt(std::string key, T t){
+        if(_mapa.count(key) == 1)
+            throw nomeTipo + " " + key + " ja existe";
+        _mapa[key] = t;
+        return _mapa[key];
+    }
+
     //retorna se o objeto está no repositório
     bool has(std::string key){
         return _mapa.count(key);

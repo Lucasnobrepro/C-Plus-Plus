@@ -153,7 +153,8 @@ public:
 
 class Whatzap: public Controller {
 public:
-    Repository<Chat> r_chat;
+
+    Repository<Chat*> r_chat;
     Repository<User> r_user;
 
 
@@ -176,14 +177,15 @@ public:
             for(int i = 1; i < (int) ui.size(); i++)
                 r_user.add(ui[i], User(ui[i]));
         }else if(cmd == "newGroup"){//_user _chat
-              r_chat.add(ui[2], Chat(ui[2]))->addFirstuser(r_user.get(ui[1]));
+              r_chat.addAt(ui[2], new Chat(ui[2]))->addFirstuser(r_user.get(ui[1]));
         }else if(cmd =="newTalk"){//_user _user1 _talk
-              r_chat.add(ui[3], Talk(ui[3]))->newTalk(r_user.get(ui[1]),r_user.get(ui[2]));
+              r_chat.addAt(ui[1]+ui[2], new Talk(ui[1]+ui[2]))->newTalk(r_user.get(ui[1]),r_user.get(ui[2]));
+
         }else if(cmd == "invite"){//_user _invited ... _invited _chat
             try{
                 int size = ui.size();
                 for(int i = 2; i < (size - 1); i++)
-                    r_chat.get(ui[size - 1])->addUser(r_user.get(ui[i]));
+                    r_chat.at(ui[size - 1])->addUser(r_user.get(ui[i]));
 
             }catch(...){
                 cerr<<"erro" <<endl;
@@ -191,7 +193,7 @@ public:
 
         }else if(cmd == "leave"){//_chat _user
             try{
-                r_chat.get(ui[1])->leave(r_user.get(ui[2]));
+                r_chat.at(ui[1])->leave(r_user.get(ui[2]));
             }catch(...){
                 cerr<<"Inesperado erro: "<<endl;
             }
@@ -199,11 +201,11 @@ public:
         }else if(cmd == "zap"){//_user _chat _my_msg
             r_user.get(ui[1])->send(poo::join(poo::slice(ui, 3), " "), ui[2]);
         }else if(cmd == "ler"){//_user _chat
-            return poo::join(r_chat.get(ui[2])->getMgs(ui[1]), "\n");
+            return poo::join(r_chat.at(ui[2])->getMgs(ui[1]), "\n");
         }else if(cmd == "chats"){//_user
             return poo::join(r_user.get(ui[1])->getChats(), " ");
         }else if(cmd == "users"){//_chat
-            return poo::join(r_chat.get(ui[1])->getUsers(), " ");
+            return poo::join(r_chat.at(ui[1])->getUsers(), " ");
         }else if(cmd == "showUsers"){
             return poo::join(r_user.keys(), " ");
         }else if(cmd == "fim")
