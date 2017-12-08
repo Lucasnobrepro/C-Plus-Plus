@@ -1,0 +1,17 @@
+#ifndef USER_H
+#define USER_H
+
+#include <iostream>
+#include <list>
+#include "chat.h"
+
+using namespace std;
+
+class User{
+    string id;
+    list<Chat*> chats;
+public:
+    User() {}
+};
+
+#endif // USER_H
